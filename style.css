@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    color: #fae883;
+    font-family: "Roboto", sans-serif;
+   
+    height: max-content;
+    padding: 20px;
+    margin-top: 50px;
+    width: 100%;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.842), rgba(0, 0, 0, 0.87)), url("images/cover.webp");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.container {
+    text-align: center;
+    max-width: 100%;
+}
+
+.info{
+    font-size: 16px;
+    color: #fff;
+}
+
+h1 {
+    font-size: 40px;
+    font-weight: bold;
+    color: #feee73;
+    margin-bottom: 10px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.amount {
+    font-size: 5rem;
+    font-weight: bold;
+    color: #FFF;
+    margin: 20px 0;
+}
+
+.update {
+    font-size: 1rem;
+    color: #FFD700;
+    margin-bottom: 20px;
+}
+
+.payment-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    color: #fff;
+}
+
+.payment-option {
+    text-align: center;
+    color: #fff;
+    flex: 1 1 100px;
+    margin: 10px;
+}
+
+.payment-option img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 5px;
+}
+
+.payment-option p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .amount {
+        font-size: 4rem;
+    }
+    
+    .payment-options {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    .amount {
+        font-size: 3rem;
+    }
+    
+    .update {
+        font-size: 0.9rem;
+    }
+    
+    .payment-options {
+        gap: 5px;
+    }
+
+    .payment-option img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .payment-option p {
+        font-size: 0.8rem;
+    }
+}
