@@ -1,4 +1,4 @@
-const sheetId = '10h9WEo_-mEJz-ICPh-aIvN3_tAHwmna11U4hC7AcYz4'; // Replace with your Google Sheet ID
+const sheetId = '1GVe34QPR_KMn7Sgrho4PhOKGH7xRluG5ledKQbCopZo'; // Replace with your Google Sheet ID
 const apiKey = 'AIzaSyB51Ie9QLRFpYMBFfdhx0kdcOfcGUiXrZw'; // Replace with your Google API Key
 const sheetRange = 'Sheet1!A1:D'; // Specify the range of cells to fetch
 
@@ -14,7 +14,7 @@ async function fetchSheetData() {
 }
 async function fetchTotalAmount() {
     try {
-        const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!E1?key=${apiKey}`);
+        const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!J2:K3?key=${apiKey}`);
         const data = await response.json();
         document.getElementById("cell-value").innerText = data.values[0][0];
         fetchLastUpdatedTime();
@@ -33,7 +33,7 @@ async function fetchLastUpdatedTime() {
         if (data.modifiedTime) {
             const lastUpdated = new Date(data.modifiedTime);
             const timeDifference = getTimeDifference(lastUpdated, new Date());
-            document.getElementById("last-updated").innerText = `Last Update - ${timeDifference}`;
+            document.getElementById("last-updated").innerText = `Last Updated - ${timeDifference}`;
             console.log("TIme");
         }
     } catch (error) {
