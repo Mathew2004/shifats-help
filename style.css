@@ -115,3 +115,86 @@ h1 {
         font-size: 0.8rem;
     }
 }
+
+
+.btn {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: scale(1.05); /* Slightly enlarge */
+}
+
+.btn:active {
+    background-color: #3e8e41; /* Even darker when clicked */
+    transform: scale(0.98); /* Slightly shrink */
+}
+
+/* Optional: Additional styles for different button types */
+.btn-download {
+    background-color: #2196F3; /* Blue background for download */
+}
+
+.btn-download:hover {
+    background-color: #1e88e5; /* Darker blue on hover */
+}
+
+.btn-filter {
+    background-color: #FF9800; /* Orange background for filter */
+}
+
+.btn-filter:hover {
+    background-color: #fb8c00; /* Darker orange on hover */
+}
+
+.filter-container {
+    width: 100%;
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+#searchBar,
+.timestamp-input {
+    padding: 10px;
+    font-size: 16px;
+
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #111;
+}
+
+th,
+td {
+    padding: 12px;
+    border: 1px solid #dddddd;
+    text-align: left;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}

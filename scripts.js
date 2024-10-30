@@ -1,4 +1,4 @@
-const sheetId = '1GVe34QPR_KMn7Sgrho4PhOKGH7xRluG5ledKQbCopZo'; 
+const sheetId = '10h9WEo_-mEJz-ICPh-aIvN3_tAHwmna11U4hC7AcYz4'; 
 const apiKey = 'AIzaSyB51Ie9QLRFpYMBFfdhx0kdcOfcGUiXrZw';
 const sheetRange = 'Sheet1!A1:G'; 
 
@@ -15,7 +15,7 @@ async function fetchSheetData() {
 
 async function fetchTotalAmount() {
     try {
-        const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!J2:K3?key=${apiKey}`);
+        const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Total Amount!D3:E4?key=${apiKey}`);
         const data = await response.json();
         document.getElementById("cell-value").innerText = data.values[0][0];
         fetchLastUpdatedTime();

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insert Data to Google Sheets</title>
+</head>
+<body>
+  <h1>Insert Donation Data</h1>
+  <form id="donationForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required>
+    
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" required>
+    
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    document.getElementById('donationForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const amount = document.getElementById('amount').value;
+      const data = [name, parseInt(amount)];
+
+      try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbwV1ZQCM4zLQ-WqysXuZWnxEh4q8ZgsrhTgdgxIHBk-I2Pp7b4kPEanfbNIPMvtE5LAHg/exechttps://script.google.com/macros/s/AKfycbw0gAUxPt1CV6oqp-Sji34oyYUjxsbP7FXvarhnm2sM93Ym8RLLbThLhG5x-60_1mNd7A/exec', {  // Replace with your Apps Script Web App URL
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+
+        const result = await response.text();
+        alert(result); // "Data inserted successfully"
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+  </script>
+</body>
+</html>
