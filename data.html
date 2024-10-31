@@ -7,9 +7,26 @@
     <title>Shifat's Donation List</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        .receiver-totals-container {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
 
+        .receiver-totals-container h3 {
+            margin: 0;
+            padding-bottom: 10px;
+            font-size: 18px;
+        }
 
-
+        #receiverTotals p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        #content{
+            overflow-x: scroll;
+        }
     </style>
 
 </head>
@@ -35,9 +52,20 @@
 
     </div>
     <div class="instruction">
-        <p>Please Select Start time and Endtime then search</p>
+        <h2>Disclaimer</h2><br>
+        <ul>
+            <li> <p>Please Select Start time and Endtime then search</p></li>
+            <li> <p style="color: rgb(250, 1, 84)">This data has been counted from October 28 onward </p></li>
+        </ul>
+       <br>
+       
 
     </div>
+
+    <div id="receiverTotals"></div>
+    <canvas id="receiverChart" width="400" height="200"></canvas>
+
+
     <p class="" id="totalAmount"></p>
     <p class="" id="totalRows"></p>
     <div id="loading" style="display: block;">
@@ -51,6 +79,7 @@
     <div id="content">
         <!-- The table will be inserted here by JavaScript -->
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.21/jspdf.plugin.autotable.min.js"></script>
     <script>
@@ -103,6 +132,7 @@
             document.getElementById('endTimestamp').addEventListener('change', filterTable);
 
             calculateTotalAmount();
+            calculateTotalPerReceiver();
         }
 
 
@@ -137,6 +167,7 @@
             const query = document.getElementById('searchBar').value.toLowerCase();
             const startTimestamp = new Date(document.getElementById('startTimestamp').value);
             const endTimestamp = new Date(document.getElementById('endTimestamp').value);
+            let receiverTotals = {};
 
             const rows = document.querySelectorAll('#tableBody tr');
 
@@ -144,16 +175,10 @@
                 const cells = Array.from(row.getElementsByTagName('td'));
                 const timestampText = cells[0]?.textContent;
 
+
+
                 let timestamp = parseTimestamp(timestampText);
-                /*if (/^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/.test(timestampText)) {
-                    // Format: 30/10/2024 12:07
-                    const [datePart, timePart] = timestampText.split(' ');
-                    const [day, month, year] = datePart.split('/');
-                    timestamp = new Date(`${year}-${month}-${day}T${timePart}`);
-                } else {
-                    // Other formats that can be parsed directly
-                    timestamp = new Date(timestampText);
-                } **/
+
 
 
                 const matchesQuery = cells.some(cell => cell.textContent.toLowerCase().includes(query));
@@ -165,7 +190,93 @@
             });
 
             calculateTotalAmount();
+            calculateTotalPerReceiver();
         }
+
+
+        function calculateTotalPerReceiver() {
+            const rows = document.querySelectorAll('#tableBody tr');
+            const receiverTotals = {};
+
+            rows.forEach(row => {
+                if (row.style.display !== 'none') { // Only consider visible rows
+                    const cells = row.getElementsByTagName('td');
+                    const receiverName = cells[5]?.textContent.trim(); // Assuming receiver name is in the 6th column (index 5)
+                    const amountText = cells[4]?.textContent.replace(/[^\d.-]/g, ''); // Assuming amount is in the 5th column (index 4)
+                    const amount = parseFloat(amountText);
+
+                    if (receiverName && !isNaN(amount)) {
+                        if (!receiverTotals[receiverName]) {
+                            receiverTotals[receiverName] = 0;
+                        }
+                        receiverTotals[receiverName] += amount;
+                    }
+                }
+            });
+
+            displayReceiverTotals(receiverTotals);
+        }
+
+        let receiverChart; // Declare a variable to hold the chart instance
+
+        function displayReceiverTotals(receiverTotals) {
+            const receiverTotalsDiv = document.getElementById('receiverTotals');
+            receiverTotalsDiv.innerHTML = ''; // Clear previous results
+
+            // Prepare data for the chart
+            const labels = Object.keys(receiverTotals);
+            const data = Object.values(receiverTotals);
+
+            // Destroy the existing chart if it exists
+            if (receiverChart) {
+                receiverChart.destroy();
+            }
+
+            // Create the new chart
+            const ctx = document.getElementById('receiverChart').getContext('2d');
+            receiverChart = new Chart(ctx, {
+                type: 'bar', // Change the type as needed
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Amount (TK)',
+                        data: data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: 'white' // Set y-axis labels to white
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'white' // Set x-axis labels to white
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white' // Set legend text to white
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Receiver Totals',
+                            color: 'white' // Set title text to white
+                        }
+                    }
+                }
+            });
+        }
+
+
 
 
         function calculateTotalAmount() {
