@@ -24,7 +24,8 @@
             margin: 5px 0;
             font-size: 16px;
         }
-        #content{
+
+        #content {
             overflow-x: scroll;
         }
     </style>
@@ -36,7 +37,7 @@
     <div class="filter-container">
         <div>
             Search <br>
-            <input type="text" id="searchBar" placeholder="Search...">
+            <input type="text" id="searchBar" placeholder="Search any data from table">
         </div>
 
         <div>
@@ -51,14 +52,19 @@
         </div>
 
     </div>
-    <div class="instruction">
-        <h2>Disclaimer</h2><br>
+    <div class="instruction" style="border: 1px solid #fff; text-align: center;">
+        <h2>Attention!!</h2><br>
         <ul>
-            <li> <p>Please Select Start time and Endtime then search</p></li>
-            <li> <p style="color: rgb(250, 1, 84)">This data has been counted from October 28 onward </p></li>
+            <!-- <li> -->
+                <!-- <p>All of this data are fetch from google sheet</p> -->
+                <p>Please Select Start time and Endtime then Search Any Data From Table </p>
+            <!-- </li> -->
+            <!-- <li> -->
+                <p style="color: rgb(250, 1, 84)">This data has been counted from October 28 onward </p>
+            <!-- </li> -->
         </ul>
-       <br>
-       
+        <br>
+
 
     </div>
 
@@ -66,7 +72,7 @@
     <canvas id="receiverChart" width="400" height="200"></canvas>
 
 
-    <p class="" id="totalAmount"></p>
+    <p style="font-size: 40px" id="totalAmount"></p>
     <p class="" id="totalRows"></p>
     <div id="loading" style="display: block;">
         loading data...
@@ -74,12 +80,15 @@
     <div class="download-container">
         <button onclick="downloadCSV()" class="btn btn-download">Download CSV</button>
         <button onclick="downloadPDF()" class="btn btn-download">Download PDF</button>
+        <button id="exportChartBtn" class="btn btn-download">Export Chart</button>
     </div>
 
     <div id="content">
         <!-- The table will be inserted here by JavaScript -->
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.21/jspdf.plugin.autotable.min.js"></script>
     <script>
@@ -226,7 +235,7 @@
             // Prepare data for the chart
             const labels = Object.keys(receiverTotals);
             const data = Object.values(receiverTotals);
-
+            const total = data.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
             // Destroy the existing chart if it exists
             if (receiverChart) {
                 receiverChart.destroy();
@@ -235,7 +244,7 @@
             // Create the new chart
             const ctx = document.getElementById('receiverChart').getContext('2d');
             receiverChart = new Chart(ctx, {
-                type: 'bar', // Change the type as needed
+                type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
@@ -247,33 +256,46 @@
                     }]
                 },
                 options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: 'white' // Set y-axis labels to white
+                    plugins: {
+                        datalabels: {
+                            color: 'white',           // Set the text color for data labels
+                            anchor: 'end',            // Position the labels at the top of each bar
+                            align: 'end',             // Align labels above each bar
+                            formatter: function(value) {
+                                return `${value.toFixed(2)} TK`;  // Format total amount as desired
+                            },
+                            font: {
+                                weight: 'bold',       // Make labels bold for better visibility
                             }
                         },
-                        x: {
-                            ticks: {
-                                color: 'white' // Set x-axis labels to white
-                            }
-                        }
-                    },
-                    plugins: {
                         legend: {
                             labels: {
-                                color: 'white' // Set legend text to white
+                                color: 'white'
                             }
                         },
                         title: {
                             display: true,
-                            text: 'Receiver Totals',
-                            color: 'white' // Set title text to white
+                            text: `Receiver Totals ${total}`,
+                            color: 'white'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: 'white'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'white'
+                            }
                         }
                     }
                 }
             });
+            
+
         }
 
 
@@ -299,7 +321,7 @@
             });
 
             document.getElementById('totalAmount').textContent = `Total Amount: ৳${total.toFixed(2)}`;
-            document.getElementById('totalRows').textContent = `Total Rows: ৳${rowCount}`;
+            document.getElementById('totalRows').textContent = `Total Rows: ${rowCount}`;
         }
 
 
@@ -341,6 +363,23 @@
 
             doc.save("donation_data.pdf");
         }
+
+
+        document.getElementById('exportChartBtn').addEventListener('click', function () {
+            // Get the chart canvas
+            const chartCanvas = document.getElementById('receiverChart');
+
+            // Convert canvas to a data URL (PNG format by default)
+            const chartURL = chartCanvas.toDataURL('image/png');
+
+            // Create a download link
+            const downloadLink = document.createElement('a');
+            downloadLink.href = chartURL;
+            downloadLink.download = 'receiver_chart.png'; // File name
+
+            // Trigger the download
+            downloadLink.click();
+        });
 
 
         // Call the fetch function to load data
